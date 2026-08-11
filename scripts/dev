@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+command="${1:-shell}"
+if [ "$#" -gt 0 ]; then
+    shift
+fi
+
+case "$command" in
+    check) exec /bin/sh ./scripts/check "$@" ;;
+    test) exec python -m unittest discover -s tests -v "$@" ;;
+    shell) exec /bin/sh "$@" ;;
+    *) exec "$command" "$@" ;;
+esac

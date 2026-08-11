@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+ruff format --check src tests
+ruff check src tests
+mypy src tests
+python -m unittest discover -s tests -v

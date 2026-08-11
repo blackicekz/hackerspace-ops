@@ -1,0 +1,16 @@
+[project]
+name = "hackerspace-ops"
+version = "0.1.0"
+description = "A modular operations agent for community hackerspaces"
+requires-python = ">=3.13"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true

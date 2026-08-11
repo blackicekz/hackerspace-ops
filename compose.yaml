@@ -1,0 +1,8 @@
+services:
+  app:
+    build:
+      context: .
+      target: development
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
