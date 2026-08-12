@@ -2,13 +2,15 @@
 
 ## Purpose
 
-Turn a normalized instruction from an authorized user into a valid stored event. Authentication and
-Telegram parsing are adapter responsibilities and are out of scope for this slice.
+Turn a normalized instruction from an already-authorized resident into a valid stored event.
+Transport authentication, identity resolution, authorization, and conversational extraction happen
+before this lower-level slice and are out of scope here.
 
 ## Terminology
 
 - **Instruction**: provider-neutral event data produced by an authenticated input adapter.
-- **Actor**: the authorized resident responsible for the instruction.
+- **Actor**: the provider-neutral identity of the authorized resident responsible for the
+  instruction.
 - **Source reference**: opaque provenance that lets an adapter trace the instruction.
 - **Event**: the domain entity created from a valid instruction.
 
@@ -43,5 +45,6 @@ repository port, and returns its identifier. Domain validation happens before st
 ## Failure cases
 
 A blank title, actor identifier, or source reference, or a start time without timezone information,
-raises `ValueError`. The repository remains unchanged. Authentication failure is intentionally
-outside this use case: an input adapter must not create a command for an unauthorized caller.
+raises `ValueError`. The repository remains unchanged. Authentication, identity resolution, and
+authorization failures are intentionally outside this use case: its caller invokes it only after
+those checks succeed.

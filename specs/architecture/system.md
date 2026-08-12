@@ -8,8 +8,11 @@ Telegram, publish past-event media, create Instagram reels, and synchronize cale
 
 The domain contains stable community concepts. Application use cases coordinate domain objects via
 ports. Input and output adapters translate protocols and vendor APIs. Infrastructure is the
-composition root and owns configuration. Authorization is an input-boundary concern: adapters must
-authenticate callers before invoking an application command, while the command records the actor.
+composition root and owns configuration. Transport adapters authenticate external messages and
+translate transport identities into provider-neutral identity claims. Application use cases own
+operation-specific authorization decisions so the same policy applies to every transport. When a
+decision needs configured facts, an application-owned port supplies only those facts; its adapter
+does not own or interpret authorization policy.
 
 ## Ports and adapters
 
@@ -17,6 +20,13 @@ Input adapters translate authenticated external input into provider-neutral appl
 Output ports are narrow interfaces owned by the application layer; adapters implement persistence
 or platform behavior. The first slice has repository and identifier-generator ports plus an
 in-memory output adapter and a normalized-message input adapter.
+
+Conversational input is not itself an event-creation command. The conversational-ingestion use case
+resolves an external identity to a resident, authorizes that resident, and uses an extraction port
+to classify or structure the message. Only a complete, unambiguous proposal reaches the existing
+event-creation use case. Identity mappings, permission facts, and extraction implementations are
+replaceable adapters behind application-owned ports. The authorization policy itself remains in the
+application layer.
 
 Planned integrations are separate boundaries: website repository publishing, Telegram channel
 publishing, calendar synchronization, completed-event content publishing, and Instagram media
@@ -33,6 +43,7 @@ current design.
 
 ## Major decisions
 
-Clean Architecture, specification-driven delivery, and the Docker-owned toolchain are recorded in
-`adr/`. Production persistence, deployment, authentication policy, and concrete platform choices
-remain deferred until their features require them.
+Clean Architecture, specification-driven delivery, the Docker-owned toolchain, and the separation
+of transport authentication from application authorization are recorded in `adr/`. Production
+persistence, deployment, concrete identity storage, and platform choices remain deferred until
+their features require them.
