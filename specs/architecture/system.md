@@ -28,6 +28,12 @@ event-creation use case. Identity mappings, permission facts, and extraction imp
 replaceable adapters behind application-owned ports. The authorization policy itself remains in the
 application layer.
 
+The first concrete input transport is designed as a Telegram adapter. Infrastructure composes the
+Telegram SDK, configuration-backed identity and permission-fact adapters, an explicitly configured
+extractor, the application policies and use cases, and persistence adapters. Transport handlers
+receive the fully composed `IngestConversationalEventProposal`; they do not construct authorization
+policy or interpret permission configuration.
+
 Planned integrations are separate boundaries: website repository publishing, Telegram channel
 publishing, calendar synchronization, completed-event content publishing, and Instagram media
 publishing. A feature adds its port only when its use case is specified; there is no shared vendor
@@ -41,9 +47,13 @@ event sources use the same commands and domain model rather than introducing tra
 the core. AI capabilities follow the same rule if later specified; no AI provider is part of the
 current design.
 
+Changing Telegram update delivery from polling to webhook, or adding another transport, replaces
+adapter/infrastructure wiring only. Both continue to emit `ConversationalInput` and consume
+application result types; domain and application behavior do not change.
+
 ## Major decisions
 
-Clean Architecture, specification-driven delivery, the Docker-owned toolchain, and the separation
-of transport authentication from application authorization are recorded in `adr/`. Production
-persistence, deployment, concrete identity storage, and platform choices remain deferred until
-their features require them.
+Clean Architecture, specification-driven delivery, the Docker-owned toolchain, the separation of
+transport authentication from application authorization, and the initial Telegram runtime choice
+are recorded in `adr/`. Production persistence, deployment, and concrete identity storage remain
+deferred until their features require them.

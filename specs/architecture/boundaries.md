@@ -18,3 +18,8 @@ whether that resident may perform the use case. An adapter may supply configured
 through a narrow application-owned port, but it never makes the operation-specific authorization
 decision. Commands that create domain objects carry only the authorized resident identity and
 provider-neutral provenance.
+
+Telegram SDK imports, update filtering, sender extraction, message replies, polling/webhook
+lifecycle, and Telegram API failures stay in adapters or infrastructure. The Telegram adapter ends
+at constructing `ConversationalInput` and presenting `ConversationalIngestionResult`. It receives a
+fully composed application use case and never reads resident mappings or permission facts itself.
