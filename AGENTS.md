@@ -1,50 +1,35 @@
-# Contributor instructions
+# Development agent instructions
 
-## Development environment
+This repository uses an agent-neutral development process. This file is a navigation and
+interaction adapter for coding agents, not a source of product behaviour or development policy.
 
-Docker is the only supported runtime and development environment. Do not require host-installed
-Python, Make, pip, Poetry, or another project-specific package manager. Use these interfaces:
+## Sources of truth
 
-- `docker compose run --rm app shell` for an interactive shell.
-- `docker compose run --rm app check` for every repository validation.
+- Product behaviour and acceptance criteria: [`specs/README.md`](specs/README.md) and
+  [`specs/features/`](specs/features/).
+- Architecture constraints and decisions: [`specs/architecture/system.md`](specs/architecture/system.md),
+  [`specs/architecture/boundaries.md`](specs/architecture/boundaries.md), and
+  [`specs/architecture/adr/`](specs/architecture/adr/).
+- Development policy and Definition of Done: [`docs/development/`](docs/development/README.md).
+- Reusable development workflows: [`docs/workflows/`](docs/workflows/implement-feature.md).
 
-The scripts under `scripts/` are container entrypoints, not host tooling. Do not add a host-language
-fallback. Pin tools in `Dockerfile` and run them through Compose inside the container.
+## Before making changes
 
-## Delivery workflow
+Identify and read the relevant specification, then read the architecture constraints for the
+affected boundaries. Follow the appropriate repository workflow. Treat specifications and neutral
+documentation as canonical; never infer product behaviour from this file.
 
-Use Spec-Driven Development in this order:
+## Verification
 
-1. Write or amend the feature specification and acceptance criteria in `specs/`.
-2. Add acceptance tests that express those criteria.
-3. Implement the smallest change that satisfies them.
-4. Run `docker compose run --rm app check`.
+Before completing work, run the canonical verification command documented in
+[`docs/development/README.md`](docs/development/README.md#canonical-verification-command):
 
-Preserve Clean Architecture: dependencies point inward. `domain` imports no project layer;
-`application` may import `domain`; adapters may import application and domain; infrastructure may
-compose all layers. External SDKs and APIs belong in adapters or infrastructure, behind application
-ports. Tests are exempt from production dependency rules.
+```sh
+docker compose run --rm app check
+```
 
-Keep changes small, readable to hackerspace residents, and free of secrets or personal data.
-Read the relevant specifications before editing code, and update them whenever observable behavior
-changes. Create an ADR for a significant, lasting architectural decision; do not create ADRs for
-routine implementation details. Never couple domain or application code to an external API, SDK,
-transport, database, Docker, or AI provider.
+## Completion reporting
 
-## Definition of Done
-
-A task is complete only when:
-
-1. The relevant specification reflects the implemented behavior.
-2. Acceptance criteria are explicit and testable.
-3. Acceptance tests cover changed observable behavior.
-4. The implementation satisfies those tests.
-5. Clean Architecture dependency rules remain satisfied.
-6. `docker compose run --rm app check` passes.
-7. Affected documentation is updated.
-8. No secrets, caches, generated artifacts, or unrelated changes are included.
-9. There are no known scope-critical TODOs.
-
-Before finishing, report specifications changed, acceptance criteria implemented, production code
-changed, tests added or changed, the canonical verification result, and intentionally deferred work.
-Do not implement deferred functionality unless explicitly requested.
+Before finishing, report specifications changed, acceptance criteria implemented or affected,
+production code changed, tests added or changed, the canonical verification result, and any
+intentionally deferred work.
