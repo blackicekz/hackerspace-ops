@@ -1,0 +1,144 @@
+name: Bug report
+description: Сообщить об ошибке или неожиданном поведении Hackerspace Ops
+title: "[Bug]: "
+labels:
+  - "bug"
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо за сообщение об ошибке!
+
+        Опишите, что произошло, что вы ожидали увидеть
+        и как воспроизвести проблему.
+
+        Не обязательно определять техническую причину ошибки —
+        этим займутся разработчики или AI-агент.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Что произошло?
+      description: |
+        Опишите наблюдаемое неправильное или неожиданное поведение.
+      placeholder: |
+        Например:
+        После подтверждения мероприятия бот публикует пост в Telegram,
+        но событие в календаре не создаётся.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Что должно было произойти?
+      description: |
+        Опишите ожидаемое поведение системы.
+      placeholder: |
+        Например:
+        После подтверждения мероприятия должны создаваться
+        анонс в Telegram и соответствующее событие в календаре.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Как воспроизвести ошибку?
+      description: |
+        Перечислите действия, после которых возникает проблема.
+        Если ошибка возникает не всегда, укажите это.
+      placeholder: |
+        Например:
+        1. Отправить боту информацию о новом мероприятии.
+        2. Проверить предложенные данные.
+        3. Подтвердить публикацию.
+        4. Открыть календарь спейса.
+        5. Событие отсутствует.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Контекст
+      description: |
+        Укажите данные, которые могут помочь воспроизвести проблему:
+        мероприятие, команда боту, канал, пример сообщения,
+        приблизительное время возникновения ошибки и другие условия.
+
+        Не публикуйте пароли, токены, API-ключи и другие секреты.
+      placeholder: |
+        Например:
+        Мероприятие: Open Hardware Meetup
+        Команда отправлена: 18 августа около 20:30
+        Telegram-пост был создан успешно
+        Ошибка проявилась при создании события в календаре
+    validations:
+      required: false
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Как часто возникает проблема?
+      options:
+        - Каждый раз
+        - Часто
+        - Иногда
+        - Произошло один раз
+        - Не знаю
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Насколько проблема мешает работе?
+      description: |
+        Оцените влияние проблемы. Окончательный приоритет
+        определяется командой при triage.
+      options:
+        - Незначительная проблема
+        - Есть обходной путь
+        - Существенно мешает работе
+        - Блокирует выполнение задачи
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Есть ли обходной путь?
+      description: |
+        Если проблему сейчас можно обойти вручную,
+        опишите как.
+      placeholder: |
+        Например:
+        Событие можно вручную добавить в Google Calendar.
+    validations:
+      required: false
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Логи, скриншоты и другие материалы
+      description: |
+        Добавьте скриншоты, сообщения об ошибках,
+        релевантные фрагменты логов или ссылки.
+
+        Перед публикацией убедитесь, что материалы
+        не содержат токены, пароли, персональные данные
+        или другие секреты.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Перед отправкой
+      options:
+        - label: Я проверил(а), что похожего bug report ещё нет
+          required: true
+        - label: Я не включил(а) в issue пароли, токены, API-ключи или другие секреты
+          required: true
