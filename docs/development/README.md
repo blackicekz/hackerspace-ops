@@ -32,4 +32,7 @@ checks, and the test suite, is:
 docker compose run --rm app check
 ```
 
+This command is the single quality gate for the repository: developers, coding agents, and CI
+all run it, and none of them substitute a different check list.
+
 Other documents in `docs/` refer back to this command rather than restating what it does.
