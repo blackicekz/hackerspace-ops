@@ -1,0 +1,20 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build bot image
+        run: docker compose build bot
+
+      - name: Deploy bot
+        run: docker compose up -d bot

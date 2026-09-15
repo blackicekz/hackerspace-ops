@@ -207,6 +207,15 @@ uncommitted env file. A future `.env.example` is useful only with variable names
 placeholders; `.env` remains ignored. Missing/invalid configuration fails startup before Telegram
 contact, names the invalid variable, and never prints its value.
 
+## Relationship to bot-bootstrap
+
+[`bot-bootstrap`](../bot-bootstrap/README.md) implements this runtime's first slice: process
+startup, configuration loading, the polling lifecycle, and Docker/CD wiring, recognizing only
+`/start` and `/help`. `/event` extraction and authorization, specified below, extend that same
+adapter and bootstrap; they do not replace it. `/start` and `/help` stay always-available,
+authorization-free commands and are not covered by the "ignore commands other than `/event`" rule
+below.
+
 ## Docker runtime interface
 
 The intended host interface is:

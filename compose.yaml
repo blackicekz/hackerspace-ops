@@ -6,3 +6,10 @@ services:
     working_dir: /workspace
     volumes:
       - .:/workspace
+
+  bot:
+    build:
+      context: .
+      target: runtime
+    env_file: .env
+    restart: unless-stopped

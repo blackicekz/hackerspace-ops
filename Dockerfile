@@ -7,6 +7,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /workspace
 
+RUN pip install --no-cache-dir python-telegram-bot==22.8
+
 COPY src/ ./src/
 
 CMD ["python", "-m", "src"]
