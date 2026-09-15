@@ -26,6 +26,17 @@ The `check` command is canonical: it runs formatting verification, linting, stri
 architecture boundary checks, and all test suites inside Docker. Compose mounts the checkout for a
 fast development loop. Run `docker compose build --no-cache` when validating toolchain changes.
 
+## Running the bot
+
+Copy `.env.example` to `.env`, fill in real values, and never commit `.env`:
+
+```sh
+docker compose up -d bot
+```
+
+The current bot is a minimal deployment bootstrap that only answers `/start` and `/help` in one
+configured test group; see [`specs/features/bot-bootstrap/`](specs/features/bot-bootstrap/README.md).
+
 ## Architecture
 
 Dependencies point inward:
