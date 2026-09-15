@@ -9,12 +9,20 @@ For this bootstrap stage (see `specs/features/bot-bootstrap/`) the workflow trig
 verified deliberately before any automatic deployment is wired up.
 
 Secrets (`TELEGRAM_BOT_TOKEN`) and the test chat ID stay in an operator-managed `.env` file on the
-host, read by Compose via `env_file`; the workflow never creates, edits, or prints this file,
-matching the repository's no-secrets-in-git norm
+host, read by Compose via `env_file`; the workflow never generates, edits, or prints this file's
+contents, matching the repository's no-secrets-in-git norm
 ([contribution-norms.md](../../../docs/development/contribution-norms.md)). The `check` workflow
 (GitHub-hosted runner) and `deploy` workflow (self-hosted runner) stay separate: `check` verifies
 every push and pull request, while `deploy`, in this stage, is invoked independently once a change
 is ready to reach the target host.
+
+The operator-managed `.env` lives at a fixed path outside any workflow's checkout directory —
+`/opt/github-actions-runner/secrets/hackerspace-ops.env` on the target host — rather than inside
+the repository working copy. `actions/checkout` runs `git clean -ffdx` before every checkout, which
+deletes untracked files, so a `.env` placed inside the checkout would not survive the next run. The
+`deploy` workflow copies the fixed-path file into the checkout immediately after checking it out
+and before building the image; this is a copy of existing operator content, not workflow-authored
+configuration.
 
 This makes the target host, its self-hosted runner, and Docker Compose (already the toolchain per
 [ADR 0002](0002-docker-toolchain.md)) the concrete deployment mechanism referenced as deferred in
