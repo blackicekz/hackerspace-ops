@@ -13,6 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Provide operator-managed .env
+        run: cp /opt/github-actions-runner/secrets/hackerspace-ops.env .env
+
       - name: Build bot image
         run: docker compose build bot
 

@@ -57,6 +57,13 @@ telegram-input's configuration rule and
 is never read into the repository or logs. Missing or invalid configuration fails startup before
 any Telegram contact and names the missing variable, never its value.
 
+The operator-managed `.env` lives at a fixed path outside the CD workflow's checkout, not inside
+the repository checkout itself: `actions/checkout` runs `git clean -ffdx` before every run, which
+deletes any untracked file — including a manually placed `.env` — from the checked-out working
+directory. The canonical location is `/opt/github-actions-runner/secrets/hackerspace-ops.env` on
+the target host; the `deploy` workflow copies it into the checkout before building the image (see
+CD verification below).
+
 A future change will move non-sensitive settings (chat IDs, privileged user lists, and similar) to
 a Google Sheet or a database; `TELEGRAM_BOT_TOKEN` remains a secret regardless of that migration,
 which is explicitly out of scope here.
@@ -79,13 +86,16 @@ The `bot` service uses the Dockerfile's `runtime` target, receives configuration
 A `deploy` GitHub Actions workflow, manually triggered (`workflow_dispatch`) for this stage, runs
 on the self-hosted runner already registered on the target host:
 
-1. Checks out the repository at the dispatched ref.
-2. Builds the `bot` service image locally on the host.
-3. Restarts the `bot` service (`docker compose up -d bot`) using the host's existing `.env` file.
+1. Checks out the repository at the dispatched ref (destructively cleaning the working directory).
+2. Copies the operator-managed `.env` from its fixed, out-of-checkout path into the checkout.
+3. Builds the `bot` service image locally on the host.
+4. Restarts the `bot` service (`docker compose up -d bot`) using the copied `.env` file.
 
-The workflow does not create, modify, or print `.env`; the operator manages it directly on the
-host. See [ADR 0006](../../architecture/adr/0006-self-hosted-cd-deployment.md) for why the trigger
-is manual at this stage.
+The workflow reads the operator-managed `.env` byte-for-byte; it never generates, edits, or prints
+its contents. The operator manages that file's content directly on the host, outside the
+repository checkout, so it survives every run's clean checkout. See
+[ADR 0006](../../architecture/adr/0006-self-hosted-cd-deployment.md) for why the trigger is manual
+at this stage and for the fixed-path decision.
 
 ## Invariants
 
