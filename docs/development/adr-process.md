@@ -23,7 +23,11 @@ Existing ADRs are numbered sequentially in
 [`specs/architecture/adr/`](../../specs/architecture/adr/). Follow the existing numbering and the
 existing shape (status, then the decision and its rationale) already used by
 [ADR 0001](../../specs/architecture/adr/0001-clean-architecture.md) through
-[ADR 0004](../../specs/architecture/adr/0004-transport-authentication-and-application-authorization.md).
+[ADR 0007](../../specs/architecture/adr/0007-use-cases-as-tool-surface.md).
+
+Decisions that always need an ADR in this repository: a new transport or caller of the use-case
+surface, a new external dependency or vendor SDK, a change to the authorization model, a change to
+how the bot is built or deployed, and any decision to place an LLM inside the bot.
 
 This document does not define a new ADR template or approval process beyond the existing
 directory convention.

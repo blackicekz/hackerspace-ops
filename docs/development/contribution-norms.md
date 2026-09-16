@@ -1,7 +1,7 @@
 # Contribution norms
 
 These norms describe the expected shape and content of a change, independent of what the change
-implements. They apply to any contributor.
+implements. They apply to any contributor — a human developer or a coding agent.
 
 ## Small changes
 
@@ -26,3 +26,34 @@ specification in [`specs/`](../../specs/README.md). See
 [ADR 0003](../../specs/architecture/adr/0003-spec-driven-development.md) for why specifications
 lead implementation in this repository, and
 [`docs/workflows/implement-feature.md`](../workflows/implement-feature.md) for the procedure.
+
+## Capabilities are tools
+
+A use case added or changed by a contribution has a typed command, a typed result union, and a
+description an AI assistant can act on, and its specification states its tool exposure
+([ADR 0007](../../specs/architecture/adr/0007-use-cases-as-tool-surface.md)). Presentation
+wording stays in transports; result semantics stay in the application layer.
+
+## One process, written down
+
+Development must stay equally accessible to humans and to coding agents. The test is simple: if a
+step of the work depends on something a contributor would have to ask a person about, that
+something belongs in the repository — in a specification, an ADR, a workflow, or this directory.
+`AGENTS.md` and `CLAUDE.md` are navigation adapters only; they never hold rules that are absent
+from the canonical documents.
+
+## Language
+
+Specifications, architecture documents, code, tests, and development documentation are written in
+English. Issue templates and the bot's replies to residents use the residents' language (currently
+Russian). Triage translates between the two ([`specs/README.md`](../../specs/README.md#language)).
+
+## Review and accountability
+
+Every Pull Request is reviewed by a human maintainer before it is merged, regardless of whether a
+human, a human using an AI tool, or an autonomous coding agent authored it. The reviewer is
+accountable for the merged change; the author — human or agent — is accountable for the accuracy
+of the completion report in the Pull Request description. A Pull Request authored wholly or
+mostly by a coding agent says so in its description. Coding agents do not merge, do not push to
+`master`, and do not run deployment; those actions are reserved for maintainers (see
+[`issue-lifecycle.md`](issue-lifecycle.md)).

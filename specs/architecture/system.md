@@ -6,6 +6,19 @@ Hackerspace Ops turns trusted event information into coordinated publishing acti
 models event creation only. Future use cases will publish upcoming events to a GitHub Pages site and
 Telegram, publish past-event media, create Instagram reels, and synchronize calendars.
 
+Every capability is deterministic code in the application layer with two kinds of callers
+([ADR 0007](adr/0007-use-cases-as-tool-surface.md)):
+
+```text
+resident  --Telegram command-->  transport adapter --\
+                                                      +--> use case --> ports --> adapters
+assistant --tool call---------->  tool adapter     --/    (one authorization policy)
+```
+
+An AI assistant is a caller of the bot, never its core: it invokes the same use cases, through the
+same authorization policy, on behalf of a resident. The bot is fully operable without an
+assistant, and everything an assistant can do, a resident can do through some human transport.
+
 The domain contains stable community concepts. Application use cases coordinate domain objects via
 ports. Input and output adapters translate protocols and vendor APIs. Infrastructure is the
 composition root and owns configuration. Transport adapters authenticate external messages and
@@ -35,17 +48,25 @@ receive the fully composed `IngestConversationalEventProposal`; they do not cons
 policy or interpret permission configuration.
 
 Planned integrations are separate boundaries: website repository publishing, Telegram channel
-publishing, calendar synchronization, completed-event content publishing, and Instagram media
-publishing. A feature adds its port only when its use case is specified; there is no shared vendor
-integration service.
+publishing, calendar synchronization, completed-event content publishing, Instagram media
+publishing, and the assistant tool interface. A feature adds its port only when its use case is
+specified; there is no shared vendor integration service.
 
 ## Extension mechanism
 
 Add a use case and the smallest ports it needs in the application layer. Add protocol translation
 or vendor implementations as adapters, then wire them with configuration in infrastructure. New
 event sources use the same commands and domain model rather than introducing transport objects into
-the core. AI capabilities follow the same rule if later specified; no AI provider is part of the
-current design.
+the core.
+
+A use case is also a tool. It has a typed command, a typed result union, and a description an
+assistant can act on; its specification states its tool exposure (see
+[`specs/README.md`](../README.md)). Once the assistant tool interface is specified, use cases are
+registered in an application-owned capability catalogue that tool adapters read; adding a
+capability means adding a use case and its catalogue entry, not a handler in a particular
+transport. An LLM may appear inside the bot only as a replaceable adapter behind a narrow
+application-owned port when a specification calls for it; natural-language understanding is
+otherwise the assistant's job outside the bot (ADR 0007).
 
 Changing Telegram update delivery from polling to webhook, or adding another transport, replaces
 adapter/infrastructure wiring only. Both continue to emit `ConversationalInput` and consume
@@ -54,6 +75,7 @@ application result types; domain and application behavior do not change.
 ## Major decisions
 
 Clean Architecture, specification-driven delivery, the Docker-owned toolchain, the separation of
-transport authentication from application authorization, and the initial Telegram runtime choice
-are recorded in `adr/`. Production persistence, deployment, and concrete identity storage remain
+transport authentication from application authorization, the initial Telegram runtime choice, the
+self-hosted CD deployment, and the position of an AI assistant as a caller of the use-case tool
+surface are recorded in `adr/`. Production persistence and concrete identity storage remain
 deferred until their features require them.

@@ -129,9 +129,13 @@ Retain the deterministic `/event` syntax as the smallest honest bootstrap option
   interpretations;
 - does not parse natural-language dates or general prose.
 
-This syntax exists only to make the first Telegram runtime executable without an LLM. A future
-deterministic or LLM-backed extractor replaces this adapter without changing Telegram translation,
-application policy, or domain code. The extractor is not implemented during this design stage.
+This syntax is the human-facing tool for event creation: it makes the runtime usable by residents
+with no LLM involved, which [ADR 0007](../../architecture/adr/0007-use-cases-as-tool-surface.md)
+requires of every capability. A richer deterministic extractor may replace this adapter without
+changing Telegram translation, application policy, or domain code. Natural-language input is
+expected to arrive through the assistant tool interface instead, where the assistant has already
+structured the proposal; an in-bot LLM extractor is not planned. The extractor is not implemented
+during this design stage.
 
 ## Behavior and result presentation
 
