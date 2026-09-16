@@ -19,6 +19,12 @@ through a narrow application-owned port, but it never makes the operation-specif
 decision. Commands that create domain objects carry only the authorized resident identity and
 provider-neutral provenance.
 
+An assistant tool adapter is a transport under the same rules: it authenticates the assistant
+session and the delegated resident claim, emits an `ExternalIdentity` with its own issuer, and
+calls the same composed use cases. It reads use-case descriptions from the application-owned
+capability catalogue; it never carries permissions of its own, never authorizes, and never lets
+provider SDK types, prompts, or model output cross into application or domain code.
+
 Telegram SDK imports, update filtering, sender extraction, message replies, polling/webhook
 lifecycle, and Telegram API failures stay in adapters or infrastructure. The Telegram adapter ends
 at constructing `ConversationalInput` and presenting `ConversationalIngestionResult`. It receives a

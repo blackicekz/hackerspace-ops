@@ -225,9 +225,26 @@ policy.
 
 ### Where can an LLM be inserted later without changing the domain?
 
-An LLM-backed adapter can implement `EventProposalExtractor`. It translates provider output into the
-application-owned extraction results and proposal value. Prompting, provider SDKs, and failures stay
-in that adapter/infrastructure; the domain and ingestion policy remain unchanged.
+An LLM-backed adapter *could* implement `EventProposalExtractor`: it would translate provider
+output into the application-owned extraction results and proposal value, with prompting, provider
+SDKs, and failures staying in that adapter/infrastructure. The port is the seam that makes this
+possible without touching the domain or ingestion policy.
+
+It is, however, not the planned direction. Under
+[ADR 0007](../../architecture/adr/0007-use-cases-as-tool-surface.md), understanding free-form text
+and assembling a complete proposal is the job of an AI assistant *outside* the bot, which then
+calls the bot's event-creation tool on the resident's behalf. Inside the bot, the extractor
+remains deterministic (the explicit `/event` syntax from
+[`telegram-input`](../telegram-input/README.md)). An in-bot LLM extractor would need its own
+specification and an ADR explaining why the assistant path is insufficient.
+
+### How does this relate to the assistant tool interface?
+
+`IngestConversationalEventProposal` is the human-transport entry point: it takes text plus an
+identity claim. The assistant tool interface will expose `CreateEvent` (or a thin use case over
+it) with an already-structured command, because the assistant has done the extraction itself.
+Both paths pass through the same `EventProposalAuthorization` and `CreateEvent`; neither bypasses
+resident identity resolution.
 
 ## Scope exclusions
 

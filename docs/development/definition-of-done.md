@@ -8,7 +8,9 @@ A change is complete only when all of the following hold:
 
 1. The relevant specification in [`specs/`](../../specs/README.md) reflects the implemented
    behaviour.
-2. Acceptance criteria are explicit and testable.
+2. Acceptance criteria are explicit and testable, and a use case that was added or changed has
+   its tool exposure stated in the specification
+   ([ADR 0007](../../specs/architecture/adr/0007-use-cases-as-tool-surface.md)).
 3. Acceptance tests cover the changed observable behaviour.
 4. The implementation satisfies those tests.
 5. [Clean Architecture dependency rules](../../specs/architecture/boundaries.md) remain satisfied.
@@ -26,7 +28,7 @@ what a specification calls for is not "done," even if the added code is correct.
 
 ## Out of scope for this document
 
-How a specific development harness communicates the completion of a change to its user or
-operator — what it reports, in what format, at what point — is not a Definition-of-Done rule. That
-is harness-specific and is documented where that harness's instructions live (currently
-`AGENTS.md`).
+How a change is reported is not a Definition-of-Done rule. The report's format is the Pull
+Request template (`.github/PULL_REQUEST_TEMPLATE.md`), the same for every contributor; how a
+specific development harness surfaces it to its own user is harness-specific and documented where
+that harness's instructions live (currently `AGENTS.md` and `CLAUDE.md`).
