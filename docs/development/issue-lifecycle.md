@@ -3,7 +3,7 @@
 GitHub Issues are the single intake for feature requests and bug reports. This document defines
 the states an Issue passes through, the labels that represent them, and who moves an Issue from
 one state to the next. It applies identically whether the contributor is a human developer, a
-human working with an AI tool, or a coding agent running in a loop.
+human working with an AI tool, or a coding agent.
 
 ## States and labels
 
@@ -44,18 +44,23 @@ label. Maintainers also review Pull Requests, merge, and run the `deploy` workfl
 4. Open a Pull Request whose description follows
    [`.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) and contains
    `Closes #<number>`. Replace `in-progress` with `in-review`.
-5. Respond to review on the same branch. When the PR is merged the Issue closes automatically.
+5. Review comments and later CI, integration, or deployment failures are handled in a new,
+   explicitly contributor-started session. When the PR is merged the Issue closes automatically.
 
-The Pull Request description is where the completion report required by `AGENTS.md` goes. It is
-the same report for a human and for an agent.
+The Pull Request description follows [`.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md).
+It is the same completion report for a human and for an agent.
 
-## Boundaries for coding agents in a loop
+## Boundaries for coding agents
 
-An agent running unattended may do everything a contributor does *up to* opening a Pull Request
-and responding to review. It does not apply `ready`, merge, close Issues by hand, edit `master`
-directly, run the `deploy` workflow, or touch the operator's `.env`. A human review of every
-agent-authored Pull Request is required before merge; see
+An agent may do everything a contributor does *up to* opening a Pull Request. It does not apply
+`ready`, merge, close Issues by hand, edit `master` directly, run the `deploy` workflow, or touch
+the operator's `.env`. A human review of every agent-authored Pull Request is required before
+merge; see
 [`contribution-norms.md`](contribution-norms.md#review-and-accountability).
+
+Creating the Pull Request ends the coding-agent session's normal cycle. Review comments and later
+CI, integration, or deployment failures are handled by a contributor-started follow-up session or
+Issue. There is no autonomous post-PR repair loop.
 
 If an agent cannot satisfy a `ready` Issue within its specification — the criteria turn out to be
 untestable, the scope needs an ADR, or the change would break an architecture boundary — it

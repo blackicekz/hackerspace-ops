@@ -14,8 +14,9 @@ same canonical documents: specifications in [`specs/`](specs/README.md), develop
    templates and wait for triage. States and labels are in
    [`docs/development/issue-lifecycle.md`](docs/development/issue-lifecycle.md).
 2. Claim the Issue and create a branch from `master` named `issue-<number>-<short-slug>`.
-3. Follow [`docs/workflows/implement-feature.md`](docs/workflows/implement-feature.md):
-   specification and acceptance criteria first, then tests, then the smallest implementation.
+3. Follow the agent-neutral implementation procedure in
+   [`docs/workflows/implement-feature.md`](docs/workflows/implement-feature.md), selecting only
+   the responsibilities required by the Issue.
 4. Make only changes related to the Issue.
 5. Run the canonical check:
 

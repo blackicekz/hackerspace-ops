@@ -23,9 +23,9 @@ Issues are the single intake: describe the problem and the observable result you
 not need to propose an implementation. Do not put tokens, passwords, or personal data into an
 Issue.
 
-An Issue is triaged into a specification with testable acceptance criteria, implemented by a
-contributor — a human developer with or without AI help, or a coding agent running in a loop —
-reviewed by a human, merged, and deployed. The states, labels, and who does what are in
+An Issue is triaged into a specification when its observable behaviour requires one, implemented by
+a contributor — a human developer with or without AI help, or a coding agent — reviewed by a human,
+merged, and deployed. The states, labels, and who does what are in
 [`docs/development/issue-lifecycle.md`](docs/development/issue-lifecycle.md).
 
 ## Development

@@ -13,15 +13,13 @@ repository is done, independent of what the product does or which tool performs 
 - `docs/development/` (this directory) is the source of truth for **engineering/development
   policy** — what makes a change complete, contribution norms, and when a decision needs an ADR.
 - [`docs/workflows/`](../workflows/implement-feature.md) is the source of truth for **reusable
-  development procedures** — the concrete steps to follow for a recurring kind of task:
-  [triaging an Issue](../workflows/triage-issue.md) and
-  [implementing a feature](../workflows/implement-feature.md).
+  development procedures** — the concrete steps to follow for triaging and implementing an Issue.
 - GitHub Issues are the **single intake** for feature requests and bug reports; the
   [issue lifecycle](issue-lifecycle.md) connects them to the procedures above.
 
 The process is the same for every contributor — a human developer, a human using an AI tool, or a
-coding agent running unattended. `AGENTS.md` and `CLAUDE.md` at the repository root are navigation
-adapters for coding agents and carry no rules of their own.
+coding agent. `AGENTS.md` and `CLAUDE.md` at the repository root are navigation adapters for
+coding agents and carry no rules of their own.
 
 ## Documents in this directory
 
@@ -47,3 +45,23 @@ This command is the single quality gate for the repository: developers, coding a
 all run it, and none of them substitute a different check list.
 
 Other documents in `docs/` refer back to this command rather than restating what it does.
+
+## Agent-neutral operating model
+
+The supported development cycle is:
+
+```text
+GitHub Issue -> local branch -> implementation -> verification -> Pull Request
+```
+
+The same cycle applies to human contributors and to coding agents, including Codex and Claude.
+Roles such as specification, architecture, implementation, testing, documentation, and review are
+responsibilities within the contributor's current session. The contributor selects only the
+responsibilities needed by the Issue; the repository does not require a fixed role pipeline or
+independently running LLM agents.
+
+The cycle ends when the Pull Request is created. Deterministic CI may report later failures, but
+the repository does not wake an LLM, run an external orchestrator, or repair post-PR failures
+automatically. A contributor starts a new session from the failure information or a new Issue.
+The repository requires no paid orchestration service or provider API key beyond a contributor's
+existing coding-agent subscription.
