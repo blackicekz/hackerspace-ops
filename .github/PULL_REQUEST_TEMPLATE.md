@@ -1,8 +1,7 @@
 Closes #
 
-<!-- The sections below are the completion report required by AGENTS.md and the Definition of
-     Done. They are the same for a human contributor and for a coding agent. Keep every heading;
-     write "none" where nothing applies. -->
+<!-- This template is the completion report for every contributor. Keep every heading and write
+     "none" where nothing applies. -->
 
 ## Specifications changed
 
@@ -28,6 +27,10 @@ Closes #
 
 <!-- Behaviour left out on purpose and where it is tracked (an Issue number or a spec's
      scope-exclusions section), or "none". -->
+
+## Authorship
+
+<!-- State whether this change was authored wholly or mostly by a coding agent. -->
 
 ## Checklist
 

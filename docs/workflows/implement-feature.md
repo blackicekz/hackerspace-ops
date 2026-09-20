@@ -1,45 +1,75 @@
-# Implement a feature or change
+# Implement an Issue
 
-This is the reusable procedure for making a change to this repository under
-[Spec-Driven Development](../../specs/architecture/adr/0003-spec-driven-development.md). It is the
-same for a human developer and for a coding agent.
+This is the agent-neutral procedure for the normal development cycle:
 
-0. **Start from a `ready` Issue.** Work begins from a GitHub Issue that triage
-   ([`triage-issue.md`](triage-issue.md)) has labelled `ready` and that nobody has claimed. Claim
-   it and branch as described in
-   [`docs/development/issue-lifecycle.md`](../development/issue-lifecycle.md). The Issue's triage
-   comment names the specification(s) to change and the draft acceptance criteria.
-1. **Identify the relevant specification.** Find the feature specification in
-   [`specs/features/`](../../specs/features/) that covers the behaviour being changed, or
-   determine that a new one is needed.
-2. **Read architecture constraints relevant to the change.** Review
-   [`specs/architecture/system.md`](../../specs/architecture/system.md) and
-   [`specs/architecture/boundaries.md`](../../specs/architecture/boundaries.md) for the layers and
-   ports the change touches.
-3. **Determine whether observable behaviour must change.** Distinguish a behaviour change from an
-   internal-only change; only the former requires updating a specification.
-4. **Update the specification and acceptance criteria first when behaviour changes.** Acceptance
-   criteria must be explicit and testable before implementation begins, per
-   [`specs/README.md`](../../specs/README.md).
-5. **Define the capability as a tool.** If the change adds or alters a use case, state its tool
-   exposure in the specification — tool name, when a caller should invoke it, side effects,
-   idempotency, and every result variant — and keep the use case to a typed command and a typed
-   result union ([ADR 0007](../../specs/architecture/adr/0007-use-cases-as-tool-surface.md)).
-   Reply wording belongs to the transport, not the use case.
-6. **Add or update tests corresponding to the acceptance criteria.** Tests should cite or clearly
-   correspond to the criteria they verify.
-7. **Implement the smallest coherent change** that satisfies the specification and respects
-   [Clean Architecture dependency rules](../../specs/architecture/boundaries.md).
-8. **Run the canonical repository verification command** (see
-   [`docs/development/README.md`](../development/README.md#canonical-verification-command)).
-9. **Review the diff against the specification and the
-   [Definition of Done](../development/definition-of-done.md).**
-10. **Update documentation or write an ADR only when required** — see
-    [`docs/development/adr-process.md`](../development/adr-process.md) for when a decision needs
-    an ADR.
-11. **Open a Pull Request** from the template, with `Closes #<number>`; the template's sections
-    are the completion report. Move the Issue to `in-review` and stop: merging and deployment are
-    a maintainer's actions.
+```text
+GitHub Issue -> local branch -> implementation -> verification -> Pull Request
+```
 
-If at any step the Issue cannot be satisfied within its specification and scope, comment on the
-Issue with what is missing, apply `blocked`, and stop rather than widening the change.
+It applies to human contributors and coding agents, including Codex and Claude. Roles are logical
+responsibilities in the current session, not independently running LLM agents. Select only the
+responsibilities needed by the Issue; there is no mandatory `specification -> architecture ->
+developer -> reviewer` pipeline.
+
+## Procedure
+
+0. **Read the Issue and repository instructions.** Read the referenced GitHub Issue, inspect the
+   current branch and working-tree state, and read the relevant repository documentation before
+   editing. Preserve unrelated contributor changes. Inspect recent Git history when it helps
+   explain an existing convention.
+
+1. **Determine the scope and responsibilities.** Decide whether the Issue needs specification,
+   architecture, implementation, tests, documentation, review, or another repository-defined
+   responsibility. A small documentation or internal-only change may need only implementation and
+   verification; a new capability may need several responsibilities.
+
+2. **Claim the Issue and create the branch.** Work only from a `ready` Issue with no assignee.
+   Claim it according to [`issue-lifecycle.md`](../development/issue-lifecycle.md), then create
+   or switch to `issue-<number>-<short-slug>` from `master`. Do not destroy unrelated work or
+   edit `master` directly.
+
+3. **Read the relevant specification and architecture.** Find the affected feature under
+   [`specs/features/`](../../specs/features/) or determine whether a new feature specification is
+   needed. Read [`system.md`](../../specs/architecture/system.md),
+   [`boundaries.md`](../../specs/architecture/boundaries.md), and relevant ADRs for touched
+   boundaries.
+
+4. **Decide whether specification artifacts are required.** GitHub Issues are the intake and
+   record the original request; `feature_request.yml` and `bug_report.yml` are Issue templates,
+   not specifications. Update or add a specification when observable behaviour, acceptance
+   criteria, or a capability changes. For an internal-only or documentation-only change, do not
+   manufacture a specification. A changed or new use case must also state its tool exposure as
+   required by ADR 0007. Do not require `spec.md` mechanically when the repository does not use it.
+
+5. **Update tests and implementation.** When behaviour changes, make acceptance criteria explicit
+   and testable, update acceptance tests, and implement the smallest coherent change. Keep
+   external APIs, SDKs, transports, and AI providers behind the repository's defined boundaries.
+   Update documentation or add an ADR only when the change requires it.
+
+6. **Run the canonical verification.** Run exactly:
+
+   ```sh
+   docker compose run --rm app check
+   ```
+
+   Fix failures caused by the Issue and repeat the check. Report unrelated pre-existing failures
+   instead of broadening scope.
+
+7. **Review and publish the branch.** Review the diff against the Issue, specification, and
+   Definition of Done. Commit only related changes, then push the task branch when authenticated
+   GitHub access is available.
+
+8. **Create the Pull Request and stop.** Use [`.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md),
+   include `Closes #<number>`, record the final canonical verification result and deferred work,
+   state that the change was authored by a coding agent when applicable, and move the Issue to
+   `in-review`. Pull Request creation ends this normal cycle. Do not merge or deploy.
+
+If the Issue cannot be completed within its approved scope, comment the missing decision or work,
+apply `blocked` according to the lifecycle, and stop. Do not widen the Issue to make it fit.
+
+## Failure boundary
+
+Deterministic CI may report failures after the Pull Request is created. The repository does not
+wake an LLM, monitor CI for repair, retry integration tests through an LLM, or require an external
+orchestration service or paid API. A contributor explicitly starts a new session with the failure
+information or a new Issue.
